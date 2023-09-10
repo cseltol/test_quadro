@@ -1,0 +1,17 @@
+option go_package = "go/src/test_quadro/";
+
+package testp;
+
+service BookShelf {
+    rpc GetBook(Author) returns (Book) {}
+    rpc GetAuthor(Book) returns (Author) {}
+}
+
+message Book {
+    required string name = 1;
+    required Author author = 2;
+}
+
+message Author {
+    required string name = 1;
+}
