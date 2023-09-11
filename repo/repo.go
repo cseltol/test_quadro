@@ -16,28 +16,3 @@ func GetConnection() *sql.DB {
 	}
 	return conn
 }
-
-func InitDB() {
-	c := GetConnection()
-	defer c.Close()
-
-	c.Exec(
-		"CREATE DATABASE bookshelf;",
-	)
-	c.Exec(
-		"\\c bookshelf",
-	)
-	c.Exec(
-		`CREATE TABLE IF NOT EXISTS books (
-			id serial PRIMARY KEY,
-			name VARCHAR(255) NOT NULL,
-			author VARCHAR(50) NOT NULL
-		);`,
-	)
-	c.Exec(
-		`CREATE TABLE IF NOT EXISTS authors (
-			id serial PRIMARY KEY,
-			name VARCHAR(255) NOT NULL
-		);`,
-	)
-}

@@ -17,7 +17,7 @@ import (
 )
 
 var (
-	port       = flag.Int("port", 50051, "The server port")
+	port       = flag.Int("port", 6000, "The server port")
 )
 
 type bookShelfServer struct {
@@ -65,9 +65,7 @@ func (s *bookShelfServer) GetBook(ctx context.Context, author *pb.Author) (*pb.B
 	return book, nil
 }
 
-func main() {
-	repo.InitDB()
-
+func Server() {
 	flag.Parse()
 	lis, err := net.Listen("tcp", fmt.Sprintf("localhost:%d", *port))
 	if err != nil {

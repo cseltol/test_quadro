@@ -1,21 +1,20 @@
-FROM golang:1.21.1-alpine3.18 AS build-stage
+FROM mysql:latest
 
-ENV GOOS=linux
+RUN chown -R mysql:root /var/lib/mysql/
 
-WORKDIR /go/src/test_quadro
+ARG MYSQL_DATABASE
+ARG MYSQL_USER
+ARG MYSQL_PASSWORD
+ARG MYSQL_ROOT_PASSWORD
 
-COPY go.mod go.sum ./
-RUN go mod download
+ENV MYSQL_DATABASE=$MYSQL_DATABASE
+ENV MYSQL_USER=$MYSQL_USER
+ENV MYSQL_PASSWORD=$MYSQL_PASSWORD
+ENV MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD
 
-COPY *.go ./
+ADD data.sql /etc/mysql/data.sql
 
-RUN CGO_ENABLED=0 go build -o /test_quadro  /go/src/test_quadro/app/.
+RUN sed -i 's/MYSQL_DATABASE/'$MYSQL_DATABASE'/g' /etc/mysql/data.sql
+RUN cp /etc/mysql/data.sql /docker-entrypoint-initdb.d
 
-FROM build-stage AS test-stage
-RUN go test -v ./...
-
-FROM scratch
-COPY --from=build-stage /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-COPY --from=build-stage main /bin/main
-
-ENTRYPOINT [ "/test_quadro" ]
+EXPOSE 3306

@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	serverAddr = flag.String("addr", "localhost:50051", "The server address in the format of host:port")
+	serverAddr = flag.String("addr", "localhost:5000", "The server address in the format of host:port")
 )
 
 // printBook get the book for the given book query
@@ -47,7 +47,7 @@ func printAuthor(client pb.BookShelfClient, book *pb.Book) string {
 	return author.GetName()
 }
 
-func main() {
+func Client() {
 	flag.Parse()
 
 	// Set up connection to the server.
